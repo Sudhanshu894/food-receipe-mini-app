@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipe Details page</title>
+    <link rel="stylesheet" href="./styles/recipe.css" />
+    <link rel="stylesheet" href="./styles/template.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="navigation"></div>
+    <div class="recipe"></div>
+  </body>
+</html>
+<script type="module">
+  var nav = document.querySelector(".navigation");
+  import { navbar } from "./components/template.js";
+  nav.innerHTML = navbar();
+  var food = JSON.parse(localStorage.getItem("savefooditems"));
+  console.log(food);
+  let recipes = JSON.parse(localStorage.getItem("favrecipes")) || [];
+  const appendfoodinfo = (items) => {
+    var imgdiv = document.createElement("div");
+    imgdiv.setAttribute("class", "imgdiv");
+    var img = document.createElement("img");
+    img.src = items[0].strMealThumb;
+    var btn = document.createElement("button");
+    btn.textContent = "Add to Favourites";
+    btn.addEventListener("click", () => {
+      if (recipes.length == 0) {
+        recipes.push(items[0]);
+      } else {
+        var flag = 0;
+        for (var i = 0; i < recipes.length; i++) {
+          if (recipes[i] == items[0]) {
+            flag = 1;
+            break;
+          }
+        }
+        if (flag == 0) {
+          recipes.push(items[0]);
+        } else {
+          alert("recipe already is in your favourite list");
+        }
+      }
+      localStorage.setItem("favrecipes", JSON.stringify(recipes));
+      console.log(recipes);
+    });
+    imgdiv.append(img, btn);
+    var contentdiv = document.createElement("div");
+    contentdiv.setAttribute("class", "contentdiv");
+    var name = document.createElement("p");
+    name.textContent = `${items[0].strMeal} (${items[0].strArea})`;
+    var inst = document.createElement("p");
+    inst.textContent = items[0].strInstructions;
+    contentdiv.append(name, inst);
+    document.querySelector(".recipe").append(imgdiv, contentdiv);
+  };
+
+  appendfoodinfo(food);
+  let count = document.getElementById("count");
+  count.textContent = recipes.length;
+</script>

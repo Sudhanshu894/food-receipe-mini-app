@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>favourite recepies</title>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+  </head>
+  <style>
+    body {
+      background-color: #181818;
+    }
+    .nav {
+      position: relative;
+      top: 0;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 90px;
+      padding: 0px 40px;
+      justify-content: center;
+      background-color: rgba(17, 17, 17, 0.829);
+    }
+    nav ul {
+      width: 40%;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    nav ul li {
+      font-size: 25px;
+      padding: 0px 40px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      font-weight: 500;
+      position: relative;
+    }
+    nav ul li:last-child {
+      font-size: 30px;
+    }
+    nav ul li a span {
+      color: white;
+      position: absolute;
+      font-size: 15px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: none;
+      background-color: firebrick;
+      text-align: center;
+      z-index: 1;
+      right: 20px;
+    }
+    nav ul li a {
+      color: rgba(255, 255, 255, 0.822);
+      text-decoration: none;
+    }
+    .fav-food {
+      width: 80%;
+      height: fit-content;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 30px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .imgdiv {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      background-color: #202020;
+      padding: 10px;
+      box-sizing: border-box;
+      border-radius: 10px;
+      transition: all 0.2s ease-in-out;
+      position: relative;
+      cursor: pointer;
+    }
+    .imgdiv > img {
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+    }
+    .imgdiv > p {
+      color: white;
+      font-size: 16px;
+      font-family: cursive;
+      padding: 0px 5px;
+      box-sizing: border-box;
+    }
+    .imgdiv:hover {
+      transform: scale(1.1);
+      border: 1px solid white;
+    }
+    .imgdiv > button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      font-size: 18px;
+      font-weight: 700;
+      font-family: cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div class="nav"></div>
+    <div class="fav-food"></div>
+  </body>
+</html>
+<script type="module">
+  let nav = document.querySelector(".nav");
+  import { navbar } from "../components/template.js";
+  nav.innerHTML = navbar();
+  let count = document.getElementById("count");
+  let recipes = JSON.parse(localStorage.getItem("favrecipes"));
+  console.log(recipes);
+  const appendfav = (recipes) => {
+    let maindiv = document.querySelector(".fav-food");
+    maindiv.innerHTML = null;
+    recipes.map((items, index) => {
+      let imgdiv = document.createElement("div");
+      imgdiv.setAttribute("class", "imgdiv");
+      let img = document.createElement("img");
+      img.src = items.strMealThumb;
+      let name = document.createElement("p");
+      name.textContent = items.strMeal;
+      let remove = document.createElement("button");
+      remove.textContent = "X";
+      remove.onclick = () => {
+        deleteitem(index);
+      };
+      imgdiv.append(img, name, remove);
+      maindiv.append(imgdiv);
+    });
+  };
+  appendfav(recipes);
+  const deleteitem = (index) => {
+    recipes.splice(index, 1);
+    localStorage.setItem("favrecipes", JSON.stringify(recipes));
+    appendfav(recipes);
+    count.textContent = recipes.length;
+  };
+  count.textContent = recipes.length;
+</script>
